@@ -1,0 +1,33 @@
+schema_version: 1
+id: scientific-reports-2024-s41598-024-55775-2-fig-1
+title: "Categorical multi-hazard states"
+source:
+  article_title: "Global multi-hazard risk assessment in a changing climate"
+  authors_credit: "Stalhandske, Z., Steinmann, C. B., Meiler, S. et al."
+  journal: "Scientific Reports"
+  publisher: "Nature Portfolio"
+  publication_date: "2024"
+  doi: "10.1038/s41598-024-55775-2"
+  article_url: "https://www.nature.com/articles/s41598-024-55775-2"
+  figure_url: "https://www.nature.com/articles/s41598-024-55775-2/figures/1"
+  figure_label: "Figure 1"
+  source_image_url: "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41598-024-55775-2/MediaObjects/41598_2024_55775_Fig1_HTML.png"
+rights:
+  licence: "CC BY 4.0"
+  licence_url: "https://creativecommons.org/licenses/by/4.0/"
+  licence_evidence_url: "https://www.nature.com/articles/s41598-024-55775-2"
+  rights_holder_notice: "© The Author(s) 2024. Article page states CC BY 4.0."
+  figure_credit_line: "No separate figure credit line or licence exception is shown in the official Figure 1 caption."
+  third_party_material_check: "passed"
+  excluded_from_repository_mit_licence: true
+attribution:
+  required_text: "Figure 1 from Stalhandske, Z., Steinmann, C. B., Meiler, S. et al. Global multi-hazard risk assessment in a changing climate, Scientific Reports 14, 5875 (2024), https://doi.org/10.1038/s41598-024-55775-2. © The Author(s) 2024. CC BY 4.0."
+  changes_made: "No project-side edits to source-figure.png. Palette outputs were generated from it with Top-Journal Palette Miner; no endorsement is implied."
+provenance:
+  retrieved_on: "2026-07-16"
+  source_sha256: "8a2c066cd64ad18d9f7dee5a9a8806eb8bd4180afede9390479dd7374fc187c6"
+analysis:
+  command: "python examples/generate_licensed_case_outputs.py"
+  input_file: "source-figure.png"
+  outputs: ["palette.json", "palette.csv", "palette-preview.png"]
+  caveats: "The four map categories carry semantic meaning; global pixel share alone is insufficient to infer their intended role."

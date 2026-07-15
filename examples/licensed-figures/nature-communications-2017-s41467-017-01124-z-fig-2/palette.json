@@ -1,0 +1,143 @@
+{
+  "source": "examples/licensed-figures/nature-communications-2017-s41467-017-01124-z-fig-2/source-figure.webp",
+  "input_type": "raster",
+  "original_size_px": [
+    1316,
+    1220
+  ],
+  "sampled_pixels": 120240,
+  "cluster_count": 10,
+  "sampling_note": "Candidate colours are approximate and require visual/semantic review.",
+  "colours": [
+    {
+      "rank": 1,
+      "hex": "#FEFFFE",
+      "rgb": [
+        254,
+        255,
+        254
+      ],
+      "area_fraction": 0.681745,
+      "candidate_role": "background-neutral",
+      "relative_luminance": 0.9975,
+      "rgb_chroma": 0.0039
+    },
+    {
+      "rank": 2,
+      "hex": "#B1E5D1",
+      "rgb": [
+        177,
+        229,
+        209
+      ],
+      "area_fraction": 0.079641,
+      "candidate_role": "data-colour-candidate",
+      "relative_luminance": 0.6999,
+      "rgb_chroma": 0.2039
+    },
+    {
+      "rank": 3,
+      "hex": "#E5EAC1",
+      "rgb": [
+        229,
+        234,
+        193
+      ],
+      "area_fraction": 0.071532,
+      "candidate_role": "data-colour-candidate",
+      "relative_luminance": 0.7935,
+      "rgb_chroma": 0.1608
+    },
+    {
+      "rank": 4,
+      "hex": "#8E8D8A",
+      "rgb": [
+        142,
+        141,
+        138
+      ],
+      "area_fraction": 0.042623,
+      "candidate_role": "structural-neutral",
+      "relative_luminance": 0.2664,
+      "rgb_chroma": 0.0157
+    },
+    {
+      "rank": 5,
+      "hex": "#56FC8D",
+      "rgb": [
+        86,
+        252,
+        141
+      ],
+      "area_fraction": 0.033699,
+      "candidate_role": "data-colour-candidate",
+      "relative_luminance": 0.7352,
+      "rgb_chroma": 0.651
+    },
+    {
+      "rank": 6,
+      "hex": "#0F08B9",
+      "rgb": [
+        15,
+        8,
+        185
+      ],
+      "area_fraction": 0.026231,
+      "candidate_role": "dark-anchor-candidate",
+      "relative_luminance": 0.0378,
+      "rgb_chroma": 0.6941
+    },
+    {
+      "rank": 7,
+      "hex": "#4C4A4C",
+      "rgb": [
+        76,
+        74,
+        76
+      ],
+      "area_fraction": 0.025757,
+      "candidate_role": "structural-neutral",
+      "relative_luminance": 0.0696,
+      "rgb_chroma": 0.0078
+    },
+    {
+      "rank": 8,
+      "hex": "#18C9E3",
+      "rgb": [
+        24,
+        201,
+        227
+      ],
+      "area_fraction": 0.015619,
+      "candidate_role": "rare-accent-candidate",
+      "relative_luminance": 0.4751,
+      "rgb_chroma": 0.7961
+    },
+    {
+      "rank": 9,
+      "hex": "#F6CF12",
+      "rgb": [
+        246,
+        207,
+        18
+      ],
+      "area_fraction": 0.014454,
+      "candidate_role": "rare-accent-candidate",
+      "relative_luminance": 0.6426,
+      "rgb_chroma": 0.8941
+    },
+    {
+      "rank": 10,
+      "hex": "#E74A0C",
+      "rgb": [
+        231,
+        74,
+        12
+      ],
+      "area_fraction": 0.008699,
+      "candidate_role": "rare-accent-candidate",
+      "relative_luminance": 0.2191,
+      "rgb_chroma": 0.8588
+    }
+  ]
+}

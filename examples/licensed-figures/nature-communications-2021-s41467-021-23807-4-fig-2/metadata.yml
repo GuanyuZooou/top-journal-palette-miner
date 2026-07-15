@@ -1,0 +1,33 @@
+schema_version: 1
+id: nature-communications-2021-s41467-021-23807-4-fig-2
+title: "Dense multichannel cell-type figure"
+source:
+  article_title: "Cell segmentation-free inference of cell types from in situ transcriptomics data"
+  authors_credit: "Park, J., Choi, W., Tiesmeyer, S. et al."
+  journal: "Nature Communications"
+  publisher: "Nature Portfolio"
+  publication_date: "2021"
+  doi: "10.1038/s41467-021-23807-4"
+  article_url: "https://www.nature.com/articles/s41467-021-23807-4"
+  figure_url: "https://www.nature.com/articles/s41467-021-23807-4/figures/2"
+  figure_label: "Figure 2"
+  source_image_url: "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41467-021-23807-4/MediaObjects/41467_2021_23807_Fig2_HTML.png?as=webp"
+rights:
+  licence: "CC BY 4.0"
+  licence_url: "https://creativecommons.org/licenses/by/4.0/"
+  licence_evidence_url: "https://www.nature.com/articles/s41467-021-23807-4"
+  rights_holder_notice: "© The Author(s) 2021. Article page states CC BY 4.0."
+  figure_credit_line: "No separate figure credit line or licence exception is shown in the official Figure 2 caption."
+  third_party_material_check: "passed"
+  excluded_from_repository_mit_licence: true
+attribution:
+  required_text: "Figure 2 from Park, J., Choi, W., Tiesmeyer, S. et al. Cell segmentation-free inference of cell types from in situ transcriptomics data, Nature Communications 12, 3545 (2021), https://doi.org/10.1038/s41467-021-23807-4. © The Author(s) 2021. CC BY 4.0."
+  changes_made: "No project-side edits to source-figure.webp. Palette outputs were generated from it with Top-Journal Palette Miner; no endorsement is implied."
+provenance:
+  retrieved_on: "2026-07-16"
+  source_sha256: "f36b76c2d082f4233114a7b90be1c52b754959956a6e0f747d18bd9a8c341c85"
+analysis:
+  command: "python examples/generate_licensed_case_outputs.py"
+  input_file: "source-figure.webp"
+  outputs: ["palette.json", "palette.csv", "palette-preview.png"]
+  caveats: "This page contains microscopy panels, categorical maps, and a heatmap; a single global palette is intentionally incomplete without panel-level review."

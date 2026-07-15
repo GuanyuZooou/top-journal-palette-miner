@@ -1,0 +1,169 @@
+{
+  "source": "examples/licensed-figures/nature-communications-2021-s41467-021-23807-4-fig-2/source-figure.webp",
+  "input_type": "raster",
+  "original_size_px": [
+    2000,
+    2527
+  ],
+  "sampled_pixels": 119812,
+  "cluster_count": 12,
+  "sampling_note": "Candidate colours are approximate and require visual/semantic review.",
+  "colours": [
+    {
+      "rank": 1,
+      "hex": "#FEFEFE",
+      "rgb": [
+        254,
+        254,
+        254
+      ],
+      "area_fraction": 0.252554,
+      "candidate_role": "background-neutral",
+      "relative_luminance": 0.9911,
+      "rgb_chroma": 0.0
+    },
+    {
+      "rank": 2,
+      "hex": "#030404",
+      "rgb": [
+        3,
+        4,
+        4
+      ],
+      "area_fraction": 0.246545,
+      "candidate_role": "structural-neutral",
+      "relative_luminance": 0.0011,
+      "rgb_chroma": 0.0039
+    },
+    {
+      "rank": 3,
+      "hex": "#E6E3F4",
+      "rgb": [
+        230,
+        227,
+        244
+      ],
+      "area_fraction": 0.115331,
+      "candidate_role": "structural-neutral",
+      "relative_luminance": 0.7829,
+      "rgb_chroma": 0.0667
+    },
+    {
+      "rank": 4,
+      "hex": "#1672A5",
+      "rgb": [
+        22,
+        114,
+        165
+      ],
+      "area_fraction": 0.077997,
+      "candidate_role": "dark-anchor-candidate",
+      "relative_luminance": 0.1492,
+      "rgb_chroma": 0.5608
+    },
+    {
+      "rank": 5,
+      "hex": "#0B5C41",
+      "rgb": [
+        11,
+        92,
+        65
+      ],
+      "area_fraction": 0.058884,
+      "candidate_role": "dark-anchor-candidate",
+      "relative_luminance": 0.0811,
+      "rgb_chroma": 0.3176
+    },
+    {
+      "rank": 6,
+      "hex": "#91979A",
+      "rgb": [
+        145,
+        151,
+        154
+      ],
+      "area_fraction": 0.048643,
+      "candidate_role": "structural-neutral",
+      "relative_luminance": 0.3049,
+      "rgb_chroma": 0.0353
+    },
+    {
+      "rank": 7,
+      "hex": "#402924",
+      "rgb": [
+        64,
+        41,
+        36
+      ],
+      "area_fraction": 0.046289,
+      "candidate_role": "dark-anchor-candidate",
+      "relative_luminance": 0.028,
+      "rgb_chroma": 0.1098
+    },
+    {
+      "rank": 8,
+      "hex": "#CDBFCA",
+      "rgb": [
+        205,
+        191,
+        202
+      ],
+      "area_fraction": 0.045104,
+      "candidate_role": "structural-neutral",
+      "relative_luminance": 0.5451,
+      "rgb_chroma": 0.0549
+    },
+    {
+      "rank": 9,
+      "hex": "#6A6458",
+      "rgb": [
+        106,
+        100,
+        88
+      ],
+      "area_fraction": 0.040747,
+      "candidate_role": "structural-neutral",
+      "relative_luminance": 0.1288,
+      "rgb_chroma": 0.0706
+    },
+    {
+      "rank": 10,
+      "hex": "#DC8C43",
+      "rgb": [
+        220,
+        140,
+        67
+      ],
+      "area_fraction": 0.029471,
+      "candidate_role": "data-colour-candidate",
+      "relative_luminance": 0.3438,
+      "rgb_chroma": 0.6
+    },
+    {
+      "rank": 11,
+      "hex": "#AE1D1B",
+      "rgb": [
+        174,
+        29,
+        27
+      ],
+      "area_fraction": 0.028344,
+      "candidate_role": "dark-anchor-candidate",
+      "relative_luminance": 0.0996,
+      "rgb_chroma": 0.5765
+    },
+    {
+      "rank": 12,
+      "hex": "#C249AE",
+      "rgb": [
+        194,
+        73,
+        174
+      ],
+      "area_fraction": 0.010091,
+      "candidate_role": "rare-accent-candidate",
+      "relative_luminance": 0.1929,
+      "rgb_chroma": 0.4745
+    }
+  ]
+}

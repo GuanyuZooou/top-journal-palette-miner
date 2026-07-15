@@ -131,7 +131,7 @@ def main() -> None:
     records = make_records(centers, labels)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     payload = {
-        "source": str(args.image),
+        "source": args.image.as_posix(),
         "input_type": "raster",
         "original_size_px": list(original_size),
         "sampled_pixels": int(len(pixels)),
@@ -149,7 +149,7 @@ def main() -> None:
             row["rgb"] = ",".join(map(str, record["rgb"]))
             writer.writerow(row)
     preview(records, args.output_dir / "palette-preview.png")
-    print(f"Wrote {len(records)} colour candidates to {args.output_dir}")
+    print(f"Wrote {len(records)} colour candidates.")
 
 
 if __name__ == "__main__":

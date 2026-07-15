@@ -1,0 +1,16 @@
+schema_version: 1
+title: "Openly licensed scientific-figure palette cases"
+license_boundary: "See THIRD_PARTY_NOTICES.md; repository MIT License does not relicense these assets."
+cases:
+  - id: scientific-reports-2024-s41598-024-55775-2-fig-1
+    path: scientific-reports-2024-s41598-024-55775-2-fig-1
+    theme: categorical-semantic-colours
+  - id: nature-communications-2017-s41467-017-01124-z-fig-2
+    path: nature-communications-2017-s41467-017-01124-z-fig-2
+    theme: continuous-heatmap
+  - id: nature-communications-2021-s41467-021-23807-4-fig-2
+    path: nature-communications-2021-s41467-021-23807-4-fig-2
+    theme: dense-multichannel-figure
+  - id: plant-phenomics-2020-1969142-fig-5
+    path: plant-phenomics-2020-1969142-fig-5
+    theme: rare-semantic-accent

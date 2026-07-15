@@ -1,0 +1,143 @@
+{
+  "source": "examples/licensed-figures/scientific-reports-2024-s41598-024-55775-2-fig-1/source-figure.png",
+  "input_type": "raster",
+  "original_size_px": [
+    1416,
+    1595
+  ],
+  "sampled_pixels": 119968,
+  "cluster_count": 10,
+  "sampling_note": "Candidate colours are approximate and require visual/semantic review.",
+  "colours": [
+    {
+      "rank": 1,
+      "hex": "#FFFFFF",
+      "rgb": [
+        255,
+        255,
+        255
+      ],
+      "area_fraction": 0.710206,
+      "candidate_role": "background-neutral",
+      "relative_luminance": 1.0,
+      "rgb_chroma": 0.0
+    },
+    {
+      "rank": 2,
+      "hex": "#F5F5F5",
+      "rgb": [
+        245,
+        245,
+        245
+      ],
+      "area_fraction": 0.171521,
+      "candidate_role": "background-neutral",
+      "relative_luminance": 0.9131,
+      "rgb_chroma": 0.0
+    },
+    {
+      "rank": 3,
+      "hex": "#EBEBEB",
+      "rgb": [
+        235,
+        235,
+        235
+      ],
+      "area_fraction": 0.052097,
+      "candidate_role": "structural-neutral",
+      "relative_luminance": 0.8308,
+      "rgb_chroma": 0.0
+    },
+    {
+      "rank": 4,
+      "hex": "#BCBCC0",
+      "rgb": [
+        188,
+        188,
+        192
+      ],
+      "area_fraction": 0.015721,
+      "candidate_role": "structural-neutral",
+      "relative_luminance": 0.5046,
+      "rgb_chroma": 0.0157
+    },
+    {
+      "rank": 5,
+      "hex": "#D6D8DB",
+      "rgb": [
+        214,
+        216,
+        219
+      ],
+      "area_fraction": 0.014846,
+      "candidate_role": "structural-neutral",
+      "relative_luminance": 0.6852,
+      "rgb_chroma": 0.0196
+    },
+    {
+      "rank": 6,
+      "hex": "#86878B",
+      "rgb": [
+        134,
+        135,
+        139
+      ],
+      "area_fraction": 0.011753,
+      "candidate_role": "structural-neutral",
+      "relative_luminance": 0.2426,
+      "rgb_chroma": 0.0196
+    },
+    {
+      "rank": 7,
+      "hex": "#989FA8",
+      "rgb": [
+        152,
+        159,
+        168
+      ],
+      "area_fraction": 0.010569,
+      "candidate_role": "structural-neutral",
+      "relative_luminance": 0.343,
+      "rgb_chroma": 0.0627
+    },
+    {
+      "rank": 8,
+      "hex": "#727074",
+      "rgb": [
+        114,
+        112,
+        116
+      ],
+      "area_fraction": 0.00721,
+      "candidate_role": "structural-neutral",
+      "relative_luminance": 0.1643,
+      "rgb_chroma": 0.0157
+    },
+    {
+      "rank": 9,
+      "hex": "#524452",
+      "rgb": [
+        82,
+        68,
+        82
+      ],
+      "area_fraction": 0.004451,
+      "candidate_role": "structural-neutral",
+      "relative_luminance": 0.0654,
+      "rgb_chroma": 0.0549
+    },
+    {
+      "rank": 10,
+      "hex": "#EA494B",
+      "rgb": [
+        234,
+        73,
+        75
+      ],
+      "area_fraction": 0.001625,
+      "candidate_role": "rare-accent-candidate",
+      "relative_luminance": 0.2277,
+      "rgb_chroma": 0.6314
+    }
+  ]
+}

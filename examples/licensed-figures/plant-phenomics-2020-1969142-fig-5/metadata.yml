@@ -1,0 +1,32 @@
+schema_version: 1
+id: plant-phenomics-2020-1969142-fig-5
+title: "Rare red emphasis in a hierarchical association plot"
+source:
+  article_title: "Hierarchical Canonical Correlation Analysis Reveals Phenotype, Genotype, and Geoclimate Associations in Plants"
+  authors_credit: "Petegrosso, R., Song, T., and Kuang, R."
+  journal: "Plant Phenomics"
+  publisher: "Science Partner Journals / AAAS"
+  publication_date: "2020"
+  doi: "10.34133/2020/1969142"
+  article_url: "https://spj.science.org/doi/10.34133/2020/1969142"
+  figure_label: "Figure 5"
+  source_image_url: "https://ars.els-cdn.com/content/image/1-s2.0-S2643651524000487-gr5_lrg.jpg"
+rights:
+  licence: "CC BY 4.0"
+  licence_url: "https://creativecommons.org/licenses/by/4.0/"
+  licence_evidence_url: "https://spj.science.org/doi/10.34133/2020/1969142"
+  rights_holder_notice: "Copyright © 2020 Raphael Petegrosso et al. Article page states CC BY 4.0."
+  figure_credit_line: "No separate figure credit line or licence exception is shown in the official Figure 5 caption."
+  third_party_material_check: "passed"
+  excluded_from_repository_mit_licence: true
+attribution:
+  required_text: "Figure 5 from Petegrosso, R., Song, T., and Kuang, R. Hierarchical Canonical Correlation Analysis Reveals Phenotype, Genotype, and Geoclimate Associations in Plants, Plant Phenomics (2020), 1969142, https://doi.org/10.34133/2020/1969142. Copyright © 2020 Raphael Petegrosso et al. CC BY 4.0."
+  changes_made: "No project-side edits to source-figure.jpg. Palette outputs were generated from it with Top-Journal Palette Miner; no endorsement is implied."
+provenance:
+  retrieved_on: "2026-07-16"
+  source_sha256: "2d38e88308f83aa3923694a8e71bbb9dafa1815422dea98dd93e3e48ae031e23"
+analysis:
+  command: "python examples/generate_licensed_case_outputs.py"
+  input_file: "source-figure.jpg"
+  outputs: ["palette.json", "palette.csv", "palette-preview.png"]
+  caveats: "The red trace occupies little area but is an intentional selected combination; area share alone should not downgrade it to an irrelevant colour."

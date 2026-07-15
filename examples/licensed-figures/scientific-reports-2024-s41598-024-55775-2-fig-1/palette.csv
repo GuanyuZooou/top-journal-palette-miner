@@ -1,0 +1,11 @@
+rank,hex,area_fraction,candidate_role,relative_luminance,rgb_chroma,rgb
+1,#FFFFFF,0.710206,background-neutral,1.0,0.0,"255,255,255"
+2,#F5F5F5,0.171521,background-neutral,0.9131,0.0,"245,245,245"
+3,#EBEBEB,0.052097,structural-neutral,0.8308,0.0,"235,235,235"
+4,#BCBCC0,0.015721,structural-neutral,0.5046,0.0157,"188,188,192"
+5,#D6D8DB,0.014846,structural-neutral,0.6852,0.0196,"214,216,219"
+6,#86878B,0.011753,structural-neutral,0.2426,0.0196,"134,135,139"
+7,#989FA8,0.010569,structural-neutral,0.343,0.0627,"152,159,168"
+8,#727074,0.00721,structural-neutral,0.1643,0.0157,"114,112,116"
+9,#524452,0.004451,structural-neutral,0.0654,0.0549,"82,68,82"
+10,#EA494B,0.001625,rare-accent-candidate,0.2277,0.6314,"234,73,75"

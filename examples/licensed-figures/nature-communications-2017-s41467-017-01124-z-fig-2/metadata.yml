@@ -1,0 +1,33 @@
+schema_version: 1
+id: nature-communications-2017-s41467-017-01124-z-fig-2
+title: "Continuous photosynthetic-energy map"
+source:
+  article_title: "Mapping the ultrafast flow of harvested solar energy in living photosynthetic cells"
+  authors_credit: "Dahlberg, P. D., Ting, P.-C., Massey, S. C. et al."
+  journal: "Nature Communications"
+  publisher: "Nature Portfolio"
+  publication_date: "2017"
+  doi: "10.1038/s41467-017-01124-z"
+  article_url: "https://www.nature.com/articles/s41467-017-01124-z"
+  figure_url: "https://www.nature.com/articles/s41467-017-01124-z/figures/2"
+  figure_label: "Figure 2"
+  source_image_url: "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41467-017-01124-z/MediaObjects/41467_2017_1124_Fig2_HTML.jpg?as=webp"
+rights:
+  licence: "CC BY 4.0"
+  licence_url: "https://creativecommons.org/licenses/by/4.0/"
+  licence_evidence_url: "https://www.nature.com/articles/s41467-017-01124-z"
+  rights_holder_notice: "© The Author(s) 2017. Article page states CC BY 4.0."
+  figure_credit_line: "No separate figure credit line or licence exception is shown in the official Figure 2 caption."
+  third_party_material_check: "passed"
+  excluded_from_repository_mit_licence: true
+attribution:
+  required_text: "Figure 2 from Dahlberg, P. D., Ting, P.-C., Massey, S. C. et al. Mapping the ultrafast flow of harvested solar energy in living photosynthetic cells, Nature Communications 8, 988 (2017), https://doi.org/10.1038/s41467-017-01124-z. © The Author(s) 2017. CC BY 4.0."
+  changes_made: "No project-side edits to source-figure.webp. Palette outputs were generated from it with Top-Journal Palette Miner; no endorsement is implied."
+provenance:
+  retrieved_on: "2026-07-16"
+  source_sha256: "aab406c3e25f3273e9f047052e8676ef9f14509c42203afc775c6eac8ca6dc77"
+analysis:
+  command: "python examples/generate_licensed_case_outputs.py"
+  input_file: "source-figure.webp"
+  outputs: ["palette.json", "palette.csv", "palette-preview.png"]
+  caveats: "The warm-to-cool field is continuous, while the dark axes, contours, and white space are structural elements with separate roles."
