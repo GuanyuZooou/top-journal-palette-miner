@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this project, please cite it using this metadata."
+title: "Top-Journal Palette Miner"
+type: software
+authors:
+  - family-names: "Zou"
+    given-names: "Guanyu"
+version: 0.1.0
+date-released: 2026-07-13
+license: MIT

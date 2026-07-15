@@ -1,0 +1,4 @@
+interface:
+  display_name: "Top-Journal Palette Miner"
+  short_description: "Reverse-engineer scientific figure colour grammar"
+  default_prompt: "Use $top-journal-palette-miner to analyse this scientific figure and recommend a reusable, accessible palette."

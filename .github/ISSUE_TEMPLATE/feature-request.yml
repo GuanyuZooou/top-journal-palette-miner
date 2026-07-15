@@ -1,0 +1,31 @@
+name: Feature request / 功能建议
+description: Suggest an improvement / 提出改进建议
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: Scientific-visualisation need / 科学可视化需求
+      description: What problem would this feature solve? / 该功能希望解决什么问题？
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behaviour / 建议方案
+      description: Describe the input, expected output, and workflow. / 请描述输入、期望输出和使用流程。
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives / 替代方案
+      description: What have you tried already? / 你已经尝试过哪些方法？
+  - type: checkboxes
+    id: rights
+    attributes:
+      label: Example data / 示例数据
+      options:
+        - label: I will only share original, synthetic, or compatibly licensed examples. / 我只会分享原创、合成或许可证兼容的示例。
+          required: true
