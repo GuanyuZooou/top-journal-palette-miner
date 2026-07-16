@@ -58,6 +58,8 @@ class PaletteMinerTests(unittest.TestCase):
             self.assertTrue((output_dir / "palette.csv").is_file())
             self.assertTrue((output_dir / "palette-preview.png").is_file())
             payload = json.loads((output_dir / "palette.json").read_text(encoding="utf-8"))
+            self.assertEqual(payload["algorithm_version"], "0.2.0")
+            self.assertEqual(payload["review_scope"], "full-image")
             self.assertEqual(payload["cluster_count"], 2)
             self.assertEqual(payload["original_size_px"], [20, 10])
 

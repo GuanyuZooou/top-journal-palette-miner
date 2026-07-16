@@ -36,3 +36,7 @@ jobs:
         run: |
           python examples/generate_example.py
           python skills/top-journal-palette-miner/scripts/mine_palette.py examples/synthetic-scientific-figure.png --output-dir output
+
+      - name: Exercise panel analysis
+        run: |
+          python skills/top-journal-palette-miner/scripts/analyze_panels.py examples/synthetic-scientific-figure.png --output-dir panel-output

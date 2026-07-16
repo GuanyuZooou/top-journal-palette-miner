@@ -12,6 +12,9 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 
+ALGORITHM_VERSION = "0.2.0"
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("image", type=Path)
@@ -131,8 +134,10 @@ def main() -> None:
     records = make_records(centers, labels)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     payload = {
+        "algorithm_version": ALGORITHM_VERSION,
         "source": args.image.as_posix(),
         "input_type": "raster",
+        "review_scope": "full-image",
         "original_size_px": list(original_size),
         "sampled_pixels": int(len(pixels)),
         "cluster_count": len(records),

@@ -10,6 +10,12 @@ The aim is not to copy journal artwork. It is to make strong visual decisions ex
 
 ![Original collage showing three scientific figure types mapped into a reusable palette system](examples/hero-palette-intelligence.png)
 
+## Try Palette Lab
+
+[**Try the live Palette Lab**](https://guanyuzooou.github.io/top-journal-palette-miner/) · [See the licensed cases](#openly-licensed-publication-case-studies) · [Use the CLI](#quick-start)
+
+Upload or drop a raster figure, adjust the number of candidate colours, click a swatch to inspect its contrast, and export a JSON or CSS palette record. The lab is static and local-only: the image never leaves the browser tab. It starts with an original project figure, not a journal image.
+
 ## Why it is different
 
 Most palette extractors return dominant RGB values. Scientific figures need more context:
@@ -22,9 +28,9 @@ Most palette extractors return dominant RGB values. Scientific figures need more
 
 ## Status
 
-**v0.1.1: specification-first release with a working candidate extractor and four traceable CC BY 4.0 publication cases.** The extractor supplies evidence for review rather than pretending visual semantics can be inferred perfectly from pixels alone.
+**v0.2.0: interactive Palette Lab, panel-aware CLI analysis, and four traceable CC BY 4.0 publication cases.** The tools supply evidence for review rather than pretending visual semantics can be inferred perfectly from pixels alone.
 
-The current command-line extractor accepts raster images supported by Pillow. PDF/SVG ingestion, perceptual clustering, and automatic panel analysis remain roadmap items.
+The command-line tools accept raster images supported by Pillow. `analyze_panels.py` conservatively proposes panel candidates from near-white gutters and produces an annotated review image. PDF/SVG ingestion and perceptual clustering remain roadmap items.
 
 ## Gallery: colour roles change with figure type
 
@@ -71,6 +77,7 @@ Requires Python 3.10 or newer.
 python -m pip install -r requirements.txt
 python examples/generate_example.py
 python skills/top-journal-palette-miner/scripts/mine_palette.py examples/synthetic-scientific-figure.png --output-dir output
+python skills/top-journal-palette-miner/scripts/analyze_panels.py examples/gallery-overview.png --output-dir panel-output
 ```
 
 Run these commands from the repository root. The final command creates:
@@ -78,6 +85,13 @@ Run these commands from the repository root. The final command creates:
 - `output/palette.json`: machine-readable candidates and extraction metadata;
 - `output/palette.csv`: a compact table for analysis or spreadsheet use;
 - `output/palette-preview.png`: a visual review sheet.
+
+The panel command creates:
+
+- `panel-output/panel-analysis.json`: panel candidates, per-panel colours, settings, and caveats;
+- `panel-output/panels-annotated.png`: a visual review image showing the proposed bounds.
+
+The detector uses near-white separator bands, so it should be treated as a review aid—not an assertion that it understands a figure's scientific layout.
 
 Useful options:
 
@@ -105,7 +119,8 @@ The Python extractor produces candidates; the skill guides semantic review, acce
 - RGB clustering is not yet perceptually uniform.
 - Area share can overemphasise large backgrounds and understate thin but important marks.
 - Anti-aliasing and compression may introduce colours that were not intentionally designed.
-- Multi-panel figures still require panel-level human review.
+- Automatic panel candidates work best with near-white gutters and still require panel-level human review.
+- Palette Lab runs on a browser-scaled raster preview; it is a fast review surface, not a substitute for publication-size inspection.
 
 ## Copyright and responsible use
 
@@ -119,6 +134,7 @@ The code here is an original implementation. No third-party MATLAB code is inclu
 ## Roadmap
 
 - perceptual clustering in OKLab;
+- manual panel crop and palette-role overrides in Palette Lab;
 - panel-level co-occurrence detection;
 - colour-vision simulation and contrast reports;
 - manual click-to-sample review interface;

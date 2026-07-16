@@ -1,6 +1,8 @@
 {
+  "algorithm_version": "0.2.0",
   "source": "examples/licensed-figures/scientific-reports-2024-s41598-024-55775-2-fig-1/source-figure.png",
   "input_type": "raster",
+  "review_scope": "full-image",
   "original_size_px": [
     1416,
     1595

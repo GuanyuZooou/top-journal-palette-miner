@@ -1,6 +1,8 @@
 {
+  "algorithm_version": "0.2.0",
   "source": "examples/licensed-figures/nature-communications-2021-s41467-021-23807-4-fig-2/source-figure.webp",
   "input_type": "raster",
+  "review_scope": "full-image",
   "original_size_px": [
     2000,
     2527

@@ -1,0 +1,990 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A local, browser-only palette explorer for scientific figures.">
+  <title>Palette Lab · Top-Journal Palette Miner</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #59657a;
+      --paper: #f5f7fb;
+      --surface: #ffffff;
+      --line: #d9e0eb;
+      --accent: #3c67e8;
+      --accent-strong: #234abf;
+      --accent-soft: #e9efff;
+      --success: #137a5c;
+      --warning: #a55a09;
+      --shadow: 0 18px 45px rgba(35, 54, 93, 0.13);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(circle at 12% -10%, rgba(98, 135, 255, 0.19), transparent 35rem),
+        radial-gradient(circle at 98% 12%, rgba(255, 183, 99, 0.16), transparent 28rem),
+        var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input { font: inherit; }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: clamp(28px, 6vw, 68px) 0 48px;
+    }
+
+    .masthead {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 26px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 10px;
+      color: var(--accent-strong);
+      font-size: 0.78rem;
+      font-weight: 760;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 5px rgba(60, 103, 232, 0.12);
+      content: "";
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 720px;
+      margin-bottom: 9px;
+      font-size: clamp(2rem, 5vw, 3.55rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .lede {
+      max-width: 660px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.58;
+    }
+
+    .privacy-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+      margin: 0;
+      padding: 10px 13px;
+      border: 1px solid #cde5db;
+      border-radius: 999px;
+      background: #effaf5;
+      color: #175f49;
+      font-size: 0.82rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .privacy-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+
+    .lab {
+      display: grid;
+      grid-template-columns: minmax(0, 1.34fr) minmax(330px, 0.66fr);
+      overflow: hidden;
+      border: 1px solid rgba(192, 204, 224, 0.96);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .figure-side {
+      min-width: 0;
+      padding: clamp(20px, 3.4vw, 38px);
+      border-right: 1px solid var(--line);
+    }
+
+    .palette-side {
+      min-width: 0;
+      padding: clamp(20px, 3.4vw, 38px);
+      background: linear-gradient(145deg, #fcfdff 0%, #f7f9ff 100%);
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      margin-bottom: 4px;
+      font-size: 1.08rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section-heading p,
+    .small-note {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 0.83rem;
+      line-height: 1.45;
+    }
+
+    .file-meta {
+      max-width: 46%;
+      color: var(--muted);
+      font-size: 0.75rem;
+      line-height: 1.35;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    .drop-zone {
+      position: relative;
+      display: grid;
+      min-height: 345px;
+      place-items: center;
+      overflow: hidden;
+      border: 1.5px dashed #b7c5e2;
+      border-radius: 16px;
+      background:
+        linear-gradient(45deg, rgba(80, 113, 209, 0.035) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(80, 113, 209, 0.035) 25%, transparent 25%),
+        #fbfcff;
+      background-position: 0 0, 12px 0;
+      background-size: 24px 24px;
+      transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+    }
+
+    .drop-zone.is-dragging {
+      border-color: var(--accent);
+      background-color: var(--accent-soft);
+      transform: scale(1.006);
+    }
+
+    .drop-zone:focus-within {
+      outline: 3px solid rgba(60, 103, 232, 0.26);
+      outline-offset: 3px;
+    }
+
+    #imageCanvas {
+      display: block;
+      width: 100%;
+      max-height: 500px;
+      object-fit: contain;
+      background: #fff;
+    }
+
+    .drop-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px;
+      pointer-events: none;
+    }
+
+    .drop-copy {
+      max-width: 72%;
+      padding: 7px 10px;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.87);
+      color: #47556d;
+      font-size: 0.75rem;
+      line-height: 1.35;
+      opacity: 0;
+      transition: opacity 180ms ease;
+    }
+
+    .drop-zone:hover .drop-copy,
+    .drop-zone:focus-within .drop-copy,
+    .drop-zone.is-dragging .drop-copy { opacity: 1; }
+
+    .button {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 14px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.84rem;
+      font-weight: 700;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+
+    .button:hover { background: var(--accent-strong); }
+    .button:active { transform: translateY(1px); }
+    .button:focus-visible,
+    input:focus-visible { outline: 3px solid rgba(60, 103, 232, 0.34); outline-offset: 2px; }
+
+    .drop-overlay .button { pointer-events: auto; }
+
+    input[type="file"] {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 18px;
+      margin: 20px 0 0;
+    }
+
+    .range-field { min-width: 0; }
+
+    .range-label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      color: var(--ink);
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .range-value {
+      color: var(--accent-strong);
+      font-variant-numeric: tabular-nums;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .analysis-status {
+      min-height: 40px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.35;
+      text-align: right;
+    }
+
+    .palette-strip {
+      display: flex;
+      height: 18px;
+      margin: 5px 0 20px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e8edf5;
+      box-shadow: inset 0 0 0 1px rgba(47, 66, 102, 0.1);
+    }
+
+    .palette-strip span {
+      min-width: 3px;
+      height: 100%;
+      transition: flex-basis 250ms ease;
+    }
+
+    .swatches {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .swatch-row {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(217, 224, 235, 0.82);
+      cursor: pointer;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+
+    .swatch-row:last-child { border-bottom: 0; }
+
+    .swatch-row:hover,
+    .swatch-row.is-selected { background: var(--accent-soft); }
+
+    .swatch-row:focus-visible {
+      outline: 3px solid rgba(60, 103, 232, 0.34);
+      outline-offset: 2px;
+    }
+
+    .swatch {
+      width: 42px;
+      height: 36px;
+      border: 1px solid rgba(16, 29, 53, 0.17);
+      border-radius: 8px;
+    }
+
+    .swatch-main { min-width: 0; }
+
+    .hex {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--ink);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.82rem;
+      font-weight: 760;
+      letter-spacing: 0.02em;
+    }
+
+    .role {
+      display: block;
+      color: var(--muted);
+      font-size: 0.75rem;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+
+    .share {
+      min-width: 42px;
+      color: var(--ink);
+      font-size: 0.84rem;
+      font-variant-numeric: tabular-nums;
+      font-weight: 750;
+      text-align: right;
+    }
+
+    .method-note {
+      margin: 18px 0 0;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.76rem;
+      line-height: 1.48;
+    }
+
+    .method-note strong { color: var(--ink); }
+
+    .selection-detail {
+      min-height: 43px;
+      margin: 15px 0 0;
+      padding: 10px 12px;
+      border: 1px solid #d7e1f8;
+      border-radius: 10px;
+      background: #f5f8ff;
+      color: #3d4d6a;
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+
+    .export-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .button-secondary {
+      min-height: 34px;
+      border-color: #cbd7ed;
+      background: #ffffff;
+      color: var(--accent-strong);
+      font-size: 0.77rem;
+    }
+
+    .button-secondary:hover { background: var(--accent-soft); }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 830px) {
+      .masthead { align-items: flex-start; flex-direction: column; }
+      .privacy-note { white-space: normal; }
+      .lab { grid-template-columns: 1fr; }
+      .figure-side { border-right: 0; border-bottom: 1px solid var(--line); }
+    }
+
+    @media (max-width: 480px) {
+      .shell { width: min(100% - 20px, 1180px); padding-top: 24px; }
+      .figure-side, .palette-side { padding: 18px; }
+      .drop-zone { min-height: 260px; }
+      .controls { grid-template-columns: 1fr; gap: 10px; }
+      .analysis-status { text-align: left; }
+      .drop-copy { max-width: 100%; }
+      .file-meta { max-width: 52%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">Top-Journal Palette Miner</p>
+        <h1>Palette Lab</h1>
+        <p class="lede">Drop in a figure to inspect its dominant colours, relative area, and likely visual roles. Everything runs in this browser tab.</p>
+      </div>
+      <p class="privacy-note"><span class="privacy-dot" aria-hidden="true"></span>Local-only analysis</p>
+    </header>
+
+    <section class="lab" aria-label="Interactive palette explorer">
+      <section class="figure-side" aria-labelledby="figure-heading">
+        <div class="section-heading">
+          <div>
+            <h2 id="figure-heading">1. Add a figure</h2>
+            <p>Use a raster image: PNG, JPEG, WebP, GIF, or TIFF where your browser supports it.</p>
+          </div>
+          <span id="fileMeta" class="file-meta">Starter figure · 960 × 580 px</span>
+        </div>
+
+        <div id="dropZone" class="drop-zone" aria-describedby="dropHelp">
+          <canvas id="imageCanvas" width="960" height="580" role="img" aria-label="Starter scientific figure preview">Your browser does not support the canvas element.</canvas>
+          <div class="drop-overlay">
+            <span id="dropHelp" class="drop-copy">Drag an image over this panel, or browse from your device. No image leaves this page.</span>
+            <button id="browseButton" class="button" type="button">Choose image</button>
+          </div>
+          <input id="fileInput" type="file" accept="image/*,.tif,.tiff" aria-label="Choose an image for palette analysis">
+        </div>
+
+        <div class="controls">
+          <div class="range-field">
+            <label class="range-label" for="colorCount">Candidate colours <span id="colorCountValue" class="range-value">6</span></label>
+            <input id="colorCount" type="range" min="3" max="12" value="6" step="1" aria-describedby="colorCountHelp">
+            <span id="colorCountHelp" class="sr-only">Adjust the number of palette colour candidates from 3 to 12.</span>
+          </div>
+          <p id="analysisStatus" class="analysis-status" aria-live="polite">Sampling 26,680 visible pixels</p>
+        </div>
+      </section>
+
+      <section class="palette-side" aria-labelledby="palette-heading">
+        <div class="section-heading">
+          <div>
+            <h2 id="palette-heading">2. Inspect colour roles</h2>
+            <p>Ranks reflect approximate pixel area, not semantic importance.</p>
+          </div>
+        </div>
+
+        <div id="paletteStrip" class="palette-strip" role="img" aria-label="Relative-area palette bar"></div>
+        <ol id="swatches" class="swatches" aria-label="Candidate palette colours"></ol>
+        <p id="selectionDetail" class="selection-detail" aria-live="polite">Click a candidate colour to inspect its contrast against a white page.</p>
+        <div class="export-actions" aria-label="Export palette">
+          <button id="exportJson" class="button button-secondary" type="button">Export JSON</button>
+          <button id="exportCss" class="button button-secondary" type="button">Export CSS</button>
+        </div>
+        <p class="method-note"><strong>How to read this:</strong> “Background neutral”, “structural neutral”, “data colour”, “rare accent”, and “dark anchor” are candidate roles inferred from colour area, luminance, and saturation. Review the actual figure before reusing a palette.</p>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const canvas = document.getElementById("imageCanvas");
+      const context = canvas.getContext("2d", { willReadFrequently: true });
+      const dropZone = document.getElementById("dropZone");
+      const fileInput = document.getElementById("fileInput");
+      const browseButton = document.getElementById("browseButton");
+      const colorCount = document.getElementById("colorCount");
+      const colorCountValue = document.getElementById("colorCountValue");
+      const fileMeta = document.getElementById("fileMeta");
+      const analysisStatus = document.getElementById("analysisStatus");
+      const paletteStrip = document.getElementById("paletteStrip");
+      const swatches = document.getElementById("swatches");
+      const selectionDetail = document.getElementById("selectionDetail");
+      const exportJson = document.getElementById("exportJson");
+      const exportCss = document.getElementById("exportCss");
+
+      let imageName = "Starter figure";
+      let originalWidth = 960;
+      let originalHeight = 580;
+      let latestRecords = [];
+      let selectedHex = null;
+
+      function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+      }
+
+      function rgbToHex(rgb) {
+        return "#" + rgb.map((channel) => channel.toString(16).padStart(2, "0")).join("").toUpperCase();
+      }
+
+      function relativeLuminance(rgb) {
+        const channels = rgb.map((channel) => {
+          const value = channel / 255;
+          return value <= 0.04045 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+      }
+
+      function saturation(rgb) {
+        const max = Math.max(...rgb) / 255;
+        const min = Math.min(...rgb) / 255;
+        const lightness = (max + min) / 2;
+        if (max === min) return 0;
+        return (max - min) / (1 - Math.abs(2 * lightness - 1));
+      }
+
+      function roleFor(rgb, share) {
+        const luminance = relativeLuminance(rgb);
+        const colorfulness = saturation(rgb);
+        if (luminance > 0.91 && colorfulness < 0.12) return "Background neutral";
+        if (colorfulness < 0.13) return "Structural neutral";
+        if (share < 0.032 && colorfulness > 0.34) return "Rare accent";
+        if (luminance < 0.14) return "Dark anchor";
+        return "Data colour";
+      }
+
+      function contrastText(rgb) {
+        return relativeLuminance(rgb) > 0.35 ? "#122036" : "#FFFFFF";
+      }
+
+      function contrastRatio(first, second) {
+        const firstLuminance = relativeLuminance(first);
+        const secondLuminance = relativeLuminance(second);
+        const lighter = Math.max(firstLuminance, secondLuminance);
+        const darker = Math.min(firstLuminance, secondLuminance);
+        return (lighter + 0.05) / (darker + 0.05);
+      }
+
+      function drawStarterFigure() {
+        const width = 960;
+        const height = 580;
+        canvas.width = width;
+        canvas.height = height;
+        context.clearRect(0, 0, width, height);
+        context.fillStyle = "#FFFFFF";
+        context.fillRect(0, 0, width, height);
+
+        const left = 84;
+        const right = 902;
+        const top = 62;
+        const bottom = 487;
+        const plotWidth = right - left;
+        const plotHeight = bottom - top;
+
+        context.fillStyle = "#1E2A44";
+        context.font = "600 25px system-ui, sans-serif";
+        context.fillText("Signal response across conditions", left, 34);
+        context.font = "16px system-ui, sans-serif";
+        context.fillStyle = "#667085";
+        context.fillText("Interactive starter figure", left, 548);
+
+        context.strokeStyle = "#E4E9F1";
+        context.lineWidth = 1;
+        for (let i = 0; i <= 5; i += 1) {
+          const y = bottom - (plotHeight * i / 5);
+          context.beginPath();
+          context.moveTo(left, y);
+          context.lineTo(right, y);
+          context.stroke();
+        }
+
+        context.strokeStyle = "#A9B4C7";
+        context.lineWidth = 1.5;
+        context.beginPath();
+        context.moveTo(left, top);
+        context.lineTo(left, bottom);
+        context.lineTo(right, bottom);
+        context.stroke();
+
+        context.save();
+        context.globalAlpha = 0.15;
+        context.fillStyle = "#4169E1";
+        context.beginPath();
+        context.moveTo(left, bottom);
+        for (let x = 0; x <= 80; x += 1) {
+          const px = left + (plotWidth * x / 80);
+          const wave = 0.66 - 0.42 * Math.exp(-Math.pow((x - 43) / 21, 2)) + 0.045 * Math.sin(x / 3.7);
+          const py = top + plotHeight * clamp(wave, 0.07, 0.93);
+          context.lineTo(px, py);
+        }
+        context.lineTo(right, bottom);
+        context.closePath();
+        context.fill();
+        context.restore();
+
+        const series = [
+          { color: "#4169E1", offset: 0, amplitude: 1 },
+          { color: "#D85A3F", offset: 0.09, amplitude: 0.82 },
+          { color: "#1A9A7A", offset: -0.05, amplitude: 0.71 }
+        ];
+
+        series.forEach((seriesItem, seriesIndex) => {
+          context.strokeStyle = seriesItem.color;
+          context.lineWidth = 4;
+          context.lineCap = "round";
+          context.lineJoin = "round";
+          context.beginPath();
+          for (let x = 0; x <= 80; x += 1) {
+            const px = left + (plotWidth * x / 80);
+            const baseline = 0.68 - 0.44 * Math.exp(-Math.pow((x - 42 - (seriesIndex * 4)) / 19, 2));
+            const wiggle = 0.03 * Math.sin(x / (3.25 + seriesIndex));
+            const normalized = clamp(baseline * seriesItem.amplitude + seriesItem.offset + wiggle, 0.06, 0.94);
+            const py = top + plotHeight * normalized;
+            if (x === 0) context.moveTo(px, py); else context.lineTo(px, py);
+          }
+          context.stroke();
+        });
+
+        const accentPoints = [
+          [396, 237], [518, 191], [634, 232], [706, 316]
+        ];
+        accentPoints.forEach(([x, y]) => {
+          context.fillStyle = "#F2A71B";
+          context.beginPath();
+          context.arc(x, y, 7.5, 0, Math.PI * 2);
+          context.fill();
+          context.strokeStyle = "#FFFFFF";
+          context.lineWidth = 2.5;
+          context.stroke();
+        });
+
+        const legend = [
+          ["Control", "#4169E1"], ["Treatment A", "#D85A3F"], ["Treatment B", "#1A9A7A"]
+        ];
+        legend.forEach(([label, color], index) => {
+          const x = 590 + (index % 2) * 154;
+          const y = 83 + Math.floor(index / 2) * 30;
+          context.fillStyle = color;
+          context.fillRect(x, y, 14, 14);
+          context.fillStyle = "#3C4658";
+          context.font = "14px system-ui, sans-serif";
+          context.fillText(label, x + 21, y + 12);
+        });
+      }
+
+      function samplePixels() {
+        const image = context.getImageData(0, 0, canvas.width, canvas.height);
+        const data = image.data;
+        const targetPixels = 30000;
+        const step = Math.max(1, Math.floor(Math.sqrt((canvas.width * canvas.height) / targetPixels)));
+        const pixels = [];
+
+        for (let y = 0; y < canvas.height; y += step) {
+          for (let x = 0; x < canvas.width; x += step) {
+            const offset = (y * canvas.width + x) * 4;
+            const alpha = data[offset + 3] / 255;
+            if (alpha < 0.02) continue;
+            const red = Math.round(data[offset] * alpha + 255 * (1 - alpha));
+            const green = Math.round(data[offset + 1] * alpha + 255 * (1 - alpha));
+            const blue = Math.round(data[offset + 2] * alpha + 255 * (1 - alpha));
+            pixels.push([red, green, blue]);
+          }
+        }
+        return pixels;
+      }
+
+      function seededCenters(pixels, count) {
+        const bins = new Map();
+        pixels.forEach((pixel) => {
+          const key = `${pixel[0] >> 3}|${pixel[1] >> 3}|${pixel[2] >> 3}`;
+          const bucket = bins.get(key) || { count: 0, sum: [0, 0, 0], key };
+          bucket.count += 1;
+          bucket.sum[0] += pixel[0];
+          bucket.sum[1] += pixel[1];
+          bucket.sum[2] += pixel[2];
+          bins.set(key, bucket);
+        });
+
+        const candidates = Array.from(bins.values()).map((bucket) => ({
+          count: bucket.count,
+          key: bucket.key,
+          rgb: bucket.sum.map((value) => value / bucket.count)
+        })).sort((a, b) => b.count - a.count || a.key.localeCompare(b.key));
+
+        if (!candidates.length) return [[255, 255, 255]];
+        const centers = [candidates[0].rgb];
+        const limit = Math.min(count, candidates.length);
+        while (centers.length < limit) {
+          let best = null;
+          let bestScore = -1;
+          candidates.forEach((candidate) => {
+            const nearestDistance = Math.min(...centers.map((center) => (
+              (candidate.rgb[0] - center[0]) ** 2 +
+              (candidate.rgb[1] - center[1]) ** 2 +
+              (candidate.rgb[2] - center[2]) ** 2
+            )));
+            const score = nearestDistance * Math.sqrt(candidate.count);
+            if (score > bestScore || (score === bestScore && best && candidate.key < best.key)) {
+              best = candidate;
+              bestScore = score;
+            }
+          });
+          if (!best) break;
+          centers.push(best.rgb);
+        }
+        return centers;
+      }
+
+      function nearestCenter(pixel, centers) {
+        let bestIndex = 0;
+        let bestDistance = Number.POSITIVE_INFINITY;
+        for (let index = 0; index < centers.length; index += 1) {
+          const center = centers[index];
+          const distance =
+            (pixel[0] - center[0]) ** 2 +
+            (pixel[1] - center[1]) ** 2 +
+            (pixel[2] - center[2]) ** 2;
+          if (distance < bestDistance) {
+            bestDistance = distance;
+            bestIndex = index;
+          }
+        }
+        return bestIndex;
+      }
+
+      function extractPalette(pixels, requestedCount) {
+        const centers = seededCenters(pixels, requestedCount);
+        let assignments = new Array(pixels.length).fill(0);
+
+        for (let iteration = 0; iteration < 10; iteration += 1) {
+          const sums = centers.map(() => [0, 0, 0, 0]);
+          let changes = 0;
+          pixels.forEach((pixel, pixelIndex) => {
+            const cluster = nearestCenter(pixel, centers);
+            if (assignments[pixelIndex] !== cluster) changes += 1;
+            assignments[pixelIndex] = cluster;
+            sums[cluster][0] += pixel[0];
+            sums[cluster][1] += pixel[1];
+            sums[cluster][2] += pixel[2];
+            sums[cluster][3] += 1;
+          });
+          centers.forEach((center, index) => {
+            if (sums[index][3]) {
+              center[0] = sums[index][0] / sums[index][3];
+              center[1] = sums[index][1] / sums[index][3];
+              center[2] = sums[index][2] / sums[index][3];
+            }
+          });
+          if (changes === 0) break;
+        }
+
+        const counts = new Array(centers.length).fill(0);
+        assignments.forEach((cluster) => { counts[cluster] += 1; });
+        return centers.map((center, index) => ({
+          rgb: center.map((channel) => Math.round(channel)),
+          count: counts[index],
+          share: counts[index] / pixels.length
+        })).filter((record) => record.count > 0).sort((a, b) => b.count - a.count);
+      }
+
+      function renderPalette(records) {
+        paletteStrip.replaceChildren();
+        swatches.replaceChildren();
+
+        records.forEach((record) => {
+          const hex = rgbToHex(record.rgb);
+          const role = roleFor(record.rgb, record.share);
+          const segment = document.createElement("span");
+          segment.style.background = hex;
+          segment.style.flexBasis = `${Math.max(record.share * 100, 0.5)}%`;
+          segment.title = `${hex}, ${Math.round(record.share * 1000) / 10}%`;
+          paletteStrip.appendChild(segment);
+
+          const row = document.createElement("li");
+          row.className = "swatch-row";
+          row.tabIndex = 0;
+          row.setAttribute("role", "button");
+          row.setAttribute("aria-label", `${hex}, ${Math.round(record.share * 1000) / 10}% of sampled pixels, ${role}`);
+          if (hex === selectedHex) row.classList.add("is-selected");
+
+          const swatch = document.createElement("span");
+          swatch.className = "swatch";
+          swatch.style.background = hex;
+          swatch.style.color = contrastText(record.rgb);
+          swatch.setAttribute("aria-hidden", "true");
+
+          const main = document.createElement("span");
+          main.className = "swatch-main";
+          const hexElement = document.createElement("span");
+          hexElement.className = "hex";
+          hexElement.textContent = hex;
+          const roleElement = document.createElement("span");
+          roleElement.className = "role";
+          roleElement.textContent = role;
+          main.append(hexElement, roleElement);
+
+          const share = document.createElement("span");
+          share.className = "share";
+          share.textContent = `${(record.share * 100).toFixed(1)}%`;
+
+          row.append(swatch, main, share);
+          const select = () => {
+            selectedHex = hex;
+            const ratio = contrastRatio(record.rgb, [255, 255, 255]);
+            const guidance = ratio >= 4.5
+              ? "Good for normal-size text on white."
+              : ratio >= 3
+                ? "Use with a larger mark or a non-colour cue."
+                : "Add a marker, label, or darker companion for contrast.";
+            selectionDetail.textContent = `${hex} · ${role} · ${ratio.toFixed(2)}:1 contrast on white. ${guidance}`;
+            renderPalette(latestRecords);
+          };
+          row.addEventListener("click", select);
+          row.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              select();
+            }
+          });
+          swatches.appendChild(row);
+        });
+        paletteStrip.setAttribute("aria-label", `Relative-area palette bar with ${records.length} candidate colours`);
+      }
+
+      function analyze() {
+        const pixels = samplePixels();
+        const count = Number(colorCount.value);
+        latestRecords = extractPalette(pixels, count);
+        if (!latestRecords.some((record) => rgbToHex(record.rgb) === selectedHex)) selectedHex = null;
+        renderPalette(latestRecords);
+        colorCountValue.textContent = String(count);
+        const roundedPixels = new Intl.NumberFormat().format(pixels.length);
+        analysisStatus.textContent = `${latestRecords.length} candidates from ${roundedPixels} sampled pixels`;
+        fileMeta.textContent = `${imageName} · ${originalWidth.toLocaleString()} × ${originalHeight.toLocaleString()} px`;
+      }
+
+      function palettePayload() {
+        return {
+          algorithm_version: "0.2.0-web",
+          source: {
+            name: imageName,
+            original_size_px: [originalWidth, originalHeight],
+            review_scope: "full-figure"
+          },
+          sampling_note: "Candidate colours are approximate and require visual and semantic review.",
+          colours: latestRecords.map((record, index) => ({
+            rank: index + 1,
+            hex: rgbToHex(record.rgb),
+            rgb: record.rgb,
+            area_fraction: Number(record.share.toFixed(6)),
+            candidate_role: roleFor(record.rgb, record.share)
+          }))
+        };
+      }
+
+      function download(filename, mimeType, content) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function drawImage(image, name) {
+        const maxDimension = 1200;
+        const scale = Math.min(1, maxDimension / Math.max(image.naturalWidth || image.width, image.naturalHeight || image.height));
+        originalWidth = image.naturalWidth || image.width;
+        originalHeight = image.naturalHeight || image.height;
+        canvas.width = Math.max(1, Math.round(originalWidth * scale));
+        canvas.height = Math.max(1, Math.round(originalHeight * scale));
+        context.fillStyle = "#FFFFFF";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        imageName = name;
+        canvas.setAttribute("aria-label", `Preview of ${name}`);
+        analyze();
+      }
+
+      function readFile(file) {
+        if (!file) return;
+        if (!file.type.startsWith("image/")) {
+          analysisStatus.textContent = "Please choose a raster image file.";
+          return;
+        }
+        analysisStatus.textContent = "Loading image locally…";
+        const reader = new FileReader();
+        reader.onload = () => {
+          const image = new Image();
+          image.onload = () => drawImage(image, file.name);
+          image.onerror = () => { analysisStatus.textContent = "This image could not be decoded by this browser."; };
+          image.src = reader.result;
+        };
+        reader.onerror = () => { analysisStatus.textContent = "This file could not be read."; };
+        reader.readAsDataURL(file);
+      }
+
+      browseButton.addEventListener("click", () => fileInput.click());
+      fileInput.addEventListener("change", () => readFile(fileInput.files[0]));
+      colorCount.addEventListener("input", () => {
+        colorCountValue.textContent = colorCount.value;
+        analyze();
+      });
+      exportJson.addEventListener("click", () => {
+        download("palette-candidates.json", "application/json", `${JSON.stringify(palettePayload(), null, 2)}\n`);
+      });
+      exportCss.addEventListener("click", () => {
+        const variables = latestRecords.map((record, index) => `  --palette-${index + 1}: ${rgbToHex(record.rgb)};`).join("\n");
+        download("palette-candidates.css", "text/css", `:root {\n${variables}\n}\n`);
+      });
+
+      ["dragenter", "dragover"].forEach((eventName) => {
+        dropZone.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          dropZone.classList.add("is-dragging");
+        });
+      });
+      ["dragleave", "drop"].forEach((eventName) => {
+        dropZone.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          dropZone.classList.remove("is-dragging");
+        });
+      });
+      dropZone.addEventListener("drop", (event) => readFile(event.dataTransfer.files[0]));
+
+      drawStarterFigure();
+      analyze();
+    })();
+  </script>
+</body>
+</html>

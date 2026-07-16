@@ -10,8 +10,8 @@ Extract the colour logic, not just the colour codes.
 ## Workflow
 
 1. Establish the source and intended reuse. Record whether the input is a screenshot, PDF render, original export, or crop. Treat screenshot colours as approximate.
-2. Inspect panels separately when possible. Do not infer one global palette when colours occur in different panels.
-3. Run `scripts/mine_palette.py` on each image to obtain candidate colours, area shares, neutral/accent labels, and a preview.
+2. Inspect panels separately when possible. For a raster multi-panel figure with white gutters, first run `scripts/analyze_panels.py`; inspect its annotated rectangles and correct crops manually when needed. Do not infer one global palette when colours occur in different panels.
+3. Run `scripts/mine_palette.py` on each confirmed image or panel to obtain candidate colours, area shares, neutral/accent labels, and a preview.
 4. Review candidates visually. Merge anti-aliased or compression-derived variants; retain small, saturated accents even when their area is low.
 5. Infer roles from geometry and context: axes/text, background data, paired categories, ordered series, reference, uncertainty, or exceptional highlight.
 6. Test the proposed sub-palette for grayscale contrast, colour-vision robustness, small-mark visibility, and print suitability.
@@ -34,6 +34,14 @@ python scripts/mine_palette.py input.png --output-dir palette-output --colors 8
 
 The script writes `palette.json`, `palette.csv`, and `palette-preview.png`. It performs deterministic RGB clustering after downsampling, then labels candidates using luminance, chroma, and area heuristics. Treat labels as evidence for review, not ground truth.
 
+For a multi-panel raster figure, produce an auditable first pass before mining individual panels:
+
+```bash
+python scripts/analyze_panels.py figure.png --output-dir panel-output --colors 6
+```
+
+This writes `panel-analysis.json` and `panels-annotated.png`. The detector searches for near-white separator bands, so it works best on exported figures with white gutters. It does not understand scientific layout: review every outlined rectangle, especially when panels touch, use a tinted background, or contain large white regions.
+
 ## Analyse colour grammar
 
 Separate these systems before recommending reuse:
@@ -55,6 +63,7 @@ Infer co-occurrence at panel level. A colour present elsewhere on the page is no
 - Treat near-white pixels as background unless visibly encoded.
 - Do not discard rare saturated colours solely because they occupy little area.
 - Report approximate values and extraction settings.
+- Record `algorithm_version` and `review_scope`; a candidate panel split is not a confirmed semantic interpretation.
 - Never claim the sampled value is the publisher's original specification.
 
 ## Transfer to a target figure

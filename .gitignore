@@ -4,5 +4,6 @@ __pycache__/
 venv/
 output/
 palette-output/
+panel-output/
 .DS_Store
 .codex-gh/
