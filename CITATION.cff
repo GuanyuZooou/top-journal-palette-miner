@@ -5,6 +5,6 @@ type: software
 authors:
   - family-names: "Zou"
     given-names: "Guanyu"
-version: 0.1.0
-date-released: 2026-07-13
+version: 0.1.1
+date-released: 2026-07-16
 license: MIT
