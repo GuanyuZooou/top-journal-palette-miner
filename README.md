@@ -16,6 +16,8 @@ The aim is not to copy journal artwork. It is to make strong visual decisions ex
 
 Upload or drop a raster figure, adjust the number of candidate colours, click a swatch to inspect its contrast, and export a JSON or CSS palette record. The lab is static and local-only: the image never leaves the browser tab. It starts with an original project figure, not a journal image.
 
+**Transfer Lab (v0.3a)** adds an explainable second mode: upload a reference and target figure, state the target figure type, important-series count, and optional emphasis intent, then export a deterministic role allocation, mapping, simplification notes, accessibility notes, `transfer.json`, a readable report, and CSS variables. It does not recolour or redraw figures, and it never claims to infer scientific importance from pixels.
+
 ## Why it is different
 
 Most palette extractors return dominant RGB values. Scientific figures need more context:
@@ -28,7 +30,7 @@ Most palette extractors return dominant RGB values. Scientific figures need more
 
 ## Status
 
-**v0.2.0: interactive Palette Lab, panel-aware CLI analysis, and four traceable CC BY 4.0 publication cases.** The tools supply evidence for review rather than pretending visual semantics can be inferred perfectly from pixels alone.
+**v0.3.0: interactive Inspect and Transfer Labs, panel-aware CLI analysis, and four traceable CC BY 4.0 publication cases.** The tools supply evidence for review rather than pretending visual semantics can be inferred perfectly from pixels alone.
 
 The command-line tools accept raster images supported by Pillow. `analyze_panels.py` conservatively proposes panel candidates from near-white gutters and produces an annotated review image. PDF/SVG ingestion and perceptual clustering remain roadmap items.
 
@@ -133,6 +135,7 @@ The code here is an original implementation. No third-party MATLAB code is inclu
 
 ## Roadmap
 
+- preview recolouring for explicitly supported chart structures, built on the v0.3 transfer schema;
 - perceptual clustering in OKLab;
 - manual panel crop and palette-role overrides in Palette Lab;
 - panel-level co-occurrence detection;

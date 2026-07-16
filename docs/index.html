@@ -113,6 +113,58 @@
       background: var(--success);
     }
 
+    .mode-tabs {
+      display: inline-flex;
+      gap: 4px;
+      margin: 0 0 24px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .mode-tab {
+      min-height: 36px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 760;
+    }
+
+    .mode-tab[aria-selected="true"] { background: var(--accent); color: #fff; }
+    .mode-panel[hidden] { display: none; }
+
+    .transfer-intro { margin: 0 0 20px; color: var(--muted); line-height: 1.5; }
+    .transfer-inputs, .transfer-results { display: grid; gap: 16px; }
+    .transfer-inputs { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: 18px; }
+    .transfer-card, .result-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+    .transfer-card h2, .result-card h2 { margin-bottom: 5px; }
+    .transfer-card p, .result-card p { color: var(--muted); font-size: 0.82rem; line-height: 1.45; }
+    .mini-canvas { display: block; width: 100%; max-height: 245px; margin-top: 13px; background: #fbfcff; border: 1px dashed #b7c5e2; border-radius: 10px; object-fit: contain; }
+    .transfer-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 18px; }
+    .field-label { display: grid; gap: 6px; color: var(--ink); font-size: 0.79rem; font-weight: 700; }
+    .field-label input, .field-label select { width: 100%; min-height: 38px; padding: 7px 9px; border: 1px solid #cbd7ed; border-radius: 8px; background: #fff; color: var(--ink); }
+    .field-wide { grid-column: span 2; }
+    .transfer-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .transfer-status { margin: 0; color: var(--muted); font-size: 0.81rem; }
+    .role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 9px; }
+    .role-card { padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: #fbfcff; }
+    .role-card .role { margin-bottom: 6px; font-weight: 700; }
+    .role-swatch { width: 100%; height: 25px; border: 1px solid rgba(16, 29, 53, 0.17); border-radius: 6px; }
+    .mapping-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .mapping-table th, .mapping-table td { padding: 8px 4px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .notes-list { margin: 0; padding-left: 18px; color: var(--muted); font-size: 0.82rem; line-height: 1.48; }
+    .transfer-exports { display: flex; flex-wrap: wrap; gap: 8px; }
+
     .lab {
       display: grid;
       grid-template-columns: minmax(0, 1.34fr) minmax(330px, 0.66fr);
@@ -446,6 +498,8 @@
       .privacy-note { white-space: normal; }
       .lab { grid-template-columns: 1fr; }
       .figure-side { border-right: 0; border-bottom: 1px solid var(--line); }
+      .transfer-inputs, .transfer-fields { grid-template-columns: 1fr; }
+      .field-wide { grid-column: auto; }
     }
 
     @media (max-width: 480px) {
@@ -474,6 +528,12 @@
       <p class="privacy-note"><span class="privacy-dot" aria-hidden="true"></span>Local-only analysis</p>
     </header>
 
+    <div class="mode-tabs" role="tablist" aria-label="Palette Lab modes">
+      <button id="inspectTab" class="mode-tab" type="button" role="tab" aria-selected="true" aria-controls="inspectPanel">Inspect</button>
+      <button id="transferTab" class="mode-tab" type="button" role="tab" aria-selected="false" aria-controls="transferPanel">Transfer</button>
+    </div>
+
+    <section id="inspectPanel" class="mode-panel" role="tabpanel" aria-labelledby="inspectTab">
     <section class="lab" aria-label="Interactive palette explorer">
       <section class="figure-side" aria-labelledby="figure-heading">
         <div class="section-heading">
@@ -521,6 +581,48 @@
         <p class="method-note"><strong>How to read this:</strong> “Background neutral”, “structural neutral”, “data colour”, “rare accent”, and “dark anchor” are candidate roles inferred from colour area, luminance, and saturation. Review the actual figure before reusing a palette.</p>
       </section>
     </section>
+    </section>
+
+    <section id="transferPanel" class="mode-panel" role="tabpanel" aria-labelledby="transferTab" hidden>
+      <p class="transfer-intro">Use a reference figure to build a restrained, reviewable colour plan for your own figure. The tool does not infer scientific meaning: you specify the series or result that matters.</p>
+      <div class="transfer-inputs">
+        <section class="transfer-card" aria-labelledby="reference-heading">
+          <h2 id="reference-heading">1. Add a reference figure</h2>
+          <p>Its candidate colours provide the visual vocabulary.</p>
+          <button id="referenceBrowseButton" class="button button-secondary" type="button">Choose reference</button>
+          <input id="referenceFileInput" type="file" accept="image/*,.tif,.tiff" aria-label="Choose a reference figure">
+          <canvas id="referenceCanvas" class="mini-canvas" width="480" height="250" role="img" aria-label="Reference figure preview">Reference preview</canvas>
+        </section>
+        <section class="transfer-card" aria-labelledby="target-heading">
+          <h2 id="target-heading">2. Add your target figure</h2>
+          <p>It is used only to identify candidate colours that may need simplifying.</p>
+          <button id="targetBrowseButton" class="button button-secondary" type="button">Choose target</button>
+          <input id="targetFileInput" type="file" accept="image/*,.tif,.tiff" aria-label="Choose a target figure">
+          <canvas id="targetCanvas" class="mini-canvas" width="480" height="250" role="img" aria-label="Target figure preview">Target preview</canvas>
+        </section>
+      </div>
+      <div class="transfer-fields" aria-label="Describe the target figure">
+        <label class="field-label" for="figureType">Figure type
+          <select id="figureType"><option value="line">Line</option><option value="scatter">Scatter</option><option value="bar">Bar</option><option value="heatmap">Heatmap</option><option value="multi-panel">Multi-panel</option><option value="other">Other</option></select>
+        </label>
+        <label class="field-label" for="seriesCount">Important data series
+          <input id="seriesCount" type="number" min="1" max="12" value="3" inputmode="numeric">
+        </label>
+        <label class="field-label field-wide" for="emphasisIntent">What should receive emphasis? <span class="small-note">Optional; names a series, result, mechanism, or marker.</span>
+          <input id="emphasisIntent" type="text" maxlength="140" placeholder="e.g. statistically significant response">
+        </label>
+      </div>
+      <div class="transfer-actions">
+        <button id="runTransfer" class="button" type="button">Generate suggestions</button>
+        <p id="transferStatus" class="transfer-status" aria-live="polite">Add both figures, then describe the target.</p>
+      </div>
+      <div id="transferResults" class="transfer-results" hidden>
+        <section class="result-card"><h2>Recommended role allocation</h2><div id="roleCards" class="role-grid"></div></section>
+        <section class="result-card"><h2>Proposed mapping</h2><table class="mapping-table"><thead><tr><th>Target use</th><th>Recommended colour</th><th>Reason</th></tr></thead><tbody id="mappingRows"></tbody></table></section>
+        <section class="result-card"><h2>Simplification and accessibility notes</h2><ul id="transferNotes" class="notes-list"></ul></section>
+        <section class="result-card"><h2>Export</h2><p>Exports contain measured candidates, deterministic rules, and limitations for review.</p><div class="transfer-exports"><button id="exportTransferJson" class="button button-secondary" type="button">Export transfer JSON</button><button id="exportTransferReport" class="button button-secondary" type="button">Export report</button><button id="exportTransferCss" class="button button-secondary" type="button">Export CSS</button></div></section>
+      </div>
+    </section>
   </main>
 
   <script>
@@ -541,12 +643,39 @@
       const selectionDetail = document.getElementById("selectionDetail");
       const exportJson = document.getElementById("exportJson");
       const exportCss = document.getElementById("exportCss");
+      const inspectTab = document.getElementById("inspectTab");
+      const transferTab = document.getElementById("transferTab");
+      const inspectPanel = document.getElementById("inspectPanel");
+      const transferPanel = document.getElementById("transferPanel");
+      const referenceCanvas = document.getElementById("referenceCanvas");
+      const targetCanvas = document.getElementById("targetCanvas");
+      const referenceContext = referenceCanvas.getContext("2d", { willReadFrequently: true });
+      const targetContext = targetCanvas.getContext("2d", { willReadFrequently: true });
+      const referenceFileInput = document.getElementById("referenceFileInput");
+      const targetFileInput = document.getElementById("targetFileInput");
+      const referenceBrowseButton = document.getElementById("referenceBrowseButton");
+      const targetBrowseButton = document.getElementById("targetBrowseButton");
+      const figureType = document.getElementById("figureType");
+      const seriesCount = document.getElementById("seriesCount");
+      const emphasisIntent = document.getElementById("emphasisIntent");
+      const runTransfer = document.getElementById("runTransfer");
+      const transferStatus = document.getElementById("transferStatus");
+      const transferResults = document.getElementById("transferResults");
+      const roleCards = document.getElementById("roleCards");
+      const mappingRows = document.getElementById("mappingRows");
+      const transferNotes = document.getElementById("transferNotes");
+      const exportTransferJson = document.getElementById("exportTransferJson");
+      const exportTransferReport = document.getElementById("exportTransferReport");
+      const exportTransferCss = document.getElementById("exportTransferCss");
 
       let imageName = "Starter figure";
       let originalWidth = 960;
       let originalHeight = 580;
       let latestRecords = [];
       let selectedHex = null;
+      let referenceFigure = null;
+      let targetFigure = null;
+      let latestTransfer = null;
 
       function clamp(value, min, max) {
         return Math.min(max, Math.max(min, value));
@@ -701,16 +830,16 @@
         });
       }
 
-      function samplePixels() {
-        const image = context.getImageData(0, 0, canvas.width, canvas.height);
+      function samplePixelsFrom(sourceContext, sourceCanvas) {
+        const image = sourceContext.getImageData(0, 0, sourceCanvas.width, sourceCanvas.height);
         const data = image.data;
         const targetPixels = 30000;
-        const step = Math.max(1, Math.floor(Math.sqrt((canvas.width * canvas.height) / targetPixels)));
+        const step = Math.max(1, Math.floor(Math.sqrt((sourceCanvas.width * sourceCanvas.height) / targetPixels)));
         const pixels = [];
 
-        for (let y = 0; y < canvas.height; y += step) {
-          for (let x = 0; x < canvas.width; x += step) {
-            const offset = (y * canvas.width + x) * 4;
+        for (let y = 0; y < sourceCanvas.height; y += step) {
+          for (let x = 0; x < sourceCanvas.width; x += step) {
+            const offset = (y * sourceCanvas.width + x) * 4;
             const alpha = data[offset + 3] / 255;
             if (alpha < 0.02) continue;
             const red = Math.round(data[offset] * alpha + 255 * (1 - alpha));
@@ -881,7 +1010,7 @@
       }
 
       function analyze() {
-        const pixels = samplePixels();
+        const pixels = samplePixelsFrom(context, canvas);
         const count = Number(colorCount.value);
         latestRecords = extractPalette(pixels, count);
         if (!latestRecords.some((record) => rgbToHex(record.rgb) === selectedHex)) selectedHex = null;
@@ -890,6 +1019,116 @@
         const roundedPixels = new Intl.NumberFormat().format(pixels.length);
         analysisStatus.textContent = `${latestRecords.length} candidates from ${roundedPixels} sampled pixels`;
         fileMeta.textContent = `${imageName} · ${originalWidth.toLocaleString()} × ${originalHeight.toLocaleString()} px`;
+      }
+
+      function recordsFor(sourceContext, sourceCanvas) {
+        return extractPalette(samplePixelsFrom(sourceContext, sourceCanvas), 8).map((record) => ({
+          ...record,
+          hex: rgbToHex(record.rgb),
+          candidate_role: roleFor(record.rgb, record.share)
+        }));
+      }
+
+      function rgbDistance(first, second) {
+        return Math.sqrt((first[0] - second[0]) ** 2 + (first[1] - second[1]) ** 2 + (first[2] - second[2]) ** 2);
+      }
+
+      function firstByRole(records, role) {
+        return records.find((record) => record.candidate_role === role) || null;
+      }
+
+      function transferRecommendation(referenceRecords, targetRecords, requestedSeries, intent) {
+        const notes = [];
+        const background = firstByRole(referenceRecords, "Background neutral");
+        const structural = referenceRecords.filter((record) => record.candidate_role === "Structural neutral");
+        const darkAnchor = firstByRole(referenceRecords, "Dark anchor");
+        const rareAccent = firstByRole(referenceRecords, "Rare accent");
+        const availableData = referenceRecords.filter((record) => record.candidate_role === "Data colour");
+        const dataColours = availableData.slice(0, requestedSeries);
+
+        if (!background) notes.push("The reference does not expose a clear background neutral among its sampled candidates; retain your target's existing background unless you review it manually.");
+        if (!structural.length) notes.push("No clear structural neutral was found in the reference candidates; review axes, grid, and label colours manually.");
+        if (!darkAnchor) notes.push("No dark anchor was found in the reference candidates. Do not invent one automatically; use a manually reviewed dark neutral if needed.");
+        if (!rareAccent) notes.push("No rare accent candidate is available in the reference, so no emphasis colour has been assigned.");
+        if (dataColours.length < requestedSeries) notes.push(`The reference exposes ${dataColours.length} candidate data colour${dataColours.length === 1 ? "" : "s"} for ${requestedSeries} requested series. Reduce the series count or review the reference manually; no colours were fabricated.`);
+        if (targetRecords.filter((record) => record.candidate_role === "Data colour").length > requestedSeries) notes.push("The target has more sampled data-colour candidates than the requested number of important series. Consider consolidating secondary series with non-colour cues or a structural neutral.");
+        if (targetRecords.filter((record) => saturation(record.rgb) > 0.48).length > requestedSeries + 1) notes.push("The target contains several high-saturation candidates. Reserve high saturation for data and, at most, one key emphasis.");
+        if (rareAccent && !intent) notes.push("A rare accent is available but remains unassigned because no emphasis intent was provided.");
+
+        const dataWarnings = [];
+        for (let index = 0; index < dataColours.length; index += 1) {
+          for (let compare = index + 1; compare < dataColours.length; compare += 1) {
+            const distance = rgbDistance(dataColours[index].rgb, dataColours[compare].rgb);
+            const grayscaleGap = Math.abs(relativeLuminance(dataColours[index].rgb) - relativeLuminance(dataColours[compare].rgb));
+            if (distance < 70) dataWarnings.push(`${dataColours[index].hex} and ${dataColours[compare].hex} may be difficult to distinguish; add marker or line-style redundancy.`);
+            if (grayscaleGap < 0.08) dataWarnings.push(`${dataColours[index].hex} and ${dataColours[compare].hex} have limited grayscale separation.`);
+          }
+        }
+        dataColours.forEach((record) => {
+          if (contrastRatio(record.rgb, [255, 255, 255]) < 2.4) dataWarnings.push(`${record.hex} has limited contrast against white; use a thicker mark, outline, or non-colour cue.`);
+        });
+        notes.push(...dataWarnings);
+
+        const mapping = [];
+        dataColours.forEach((record, index) => mapping.push({ target_use: `Target series ${index + 1}`, hex: record.hex, reason: "Reference data-colour candidate; limited by requested series count." }));
+        if (darkAnchor) mapping.push({ target_use: "Axes / labels", hex: darkAnchor.hex, reason: "Low-luminance reference candidate for structural anchoring." });
+        if (structural[0]) mapping.push({ target_use: "Grid / secondary structure", hex: structural[0].hex, reason: "Reference structural-neutral candidate." });
+        if (rareAccent && intent) mapping.push({ target_use: `Key emphasis: ${intent}`, hex: rareAccent.hex, reason: "The only rare accent allocation; scientific importance was specified by the researcher." });
+
+        return { background, structural, darkAnchor, rareAccent, dataColours, mapping, notes };
+      }
+
+      function transferPayload() {
+        if (!latestTransfer) return null;
+        return latestTransfer;
+      }
+
+      function renderTransfer(payload) {
+        roleCards.replaceChildren();
+        mappingRows.replaceChildren();
+        transferNotes.replaceChildren();
+        const recommendation = payload.recommendation;
+        const roles = [
+          ["Background neutral", recommendation.background_neutral],
+          ["Structural neutral", recommendation.structural_neutrals[0]],
+          ["Dark anchor", recommendation.dark_anchor],
+          ["Rare accent", recommendation.rare_accent],
+          ["Data colours", recommendation.data_colours[0]]
+        ];
+        roles.forEach(([label, record]) => {
+          const card = document.createElement("div"); card.className = "role-card";
+          const role = document.createElement("span"); role.className = "role"; role.textContent = label;
+          const swatch = document.createElement("div"); swatch.className = "role-swatch";
+          if (record) { swatch.style.background = record.hex; swatch.title = record.hex; }
+          else { swatch.style.background = "repeating-linear-gradient(45deg, #eef1f6, #eef1f6 8px, #fff 8px, #fff 16px)"; swatch.title = "Not assigned"; }
+          card.append(role, swatch); roleCards.appendChild(card);
+        });
+        recommendation.mapping.forEach((entry) => {
+          const row = document.createElement("tr");
+          [entry.target_use, entry.hex, entry.reason].forEach((value) => { const cell = document.createElement("td"); cell.textContent = value; row.appendChild(cell); });
+          mappingRows.appendChild(row);
+        });
+        [...recommendation.simplification_advice, ...recommendation.accessibility_notes, ...payload.limitations].forEach((note) => { const item = document.createElement("li"); item.textContent = note; transferNotes.appendChild(item); });
+        transferResults.hidden = false;
+      }
+
+      function runTransferAnalysis() {
+        if (!referenceFigure || !targetFigure) { transferStatus.textContent = "Add both a reference figure and a target figure before generating suggestions."; return; }
+        const requestedSeries = clamp(Number.parseInt(seriesCount.value, 10) || 1, 1, 12);
+        seriesCount.value = String(requestedSeries);
+        const referenceRecords = recordsFor(referenceContext, referenceCanvas);
+        const targetRecords = recordsFor(targetContext, targetCanvas);
+        const recommendation = transferRecommendation(referenceRecords, targetRecords, requestedSeries, emphasisIntent.value.trim());
+        latestTransfer = {
+          schema_version: 1,
+          algorithm_version: "0.3.0-web",
+          reference: { filename: referenceFigure.name, palette: referenceRecords.map((record) => ({ hex: record.hex, rgb: record.rgb, area_fraction: Number(record.share.toFixed(6)) })), roles: referenceRecords.map((record) => ({ hex: record.hex, candidate_role: record.candidate_role })) },
+          target: { filename: targetFigure.name, figure_type: figureType.value, requested_series_count: requestedSeries, emphasis_intent: emphasisIntent.value.trim(), observed_palette: targetRecords.map((record) => ({ hex: record.hex, rgb: record.rgb, area_fraction: Number(record.share.toFixed(6)), candidate_role: record.candidate_role })) },
+          recommendation: { background_neutral: recommendation.background, structural_neutrals: recommendation.structural, data_colours: recommendation.dataColours, dark_anchor: recommendation.darkAnchor, rare_accent: recommendation.rareAccent, mapping: recommendation.mapping, simplification_advice: recommendation.notes.filter((note) => !note.includes("contrast") && !note.includes("grayscale") && !note.includes("difficult to distinguish")), accessibility_notes: recommendation.notes.filter((note) => note.includes("contrast") || note.includes("grayscale") || note.includes("difficult to distinguish")) },
+          limitations: ["Candidate roles are deterministic pixel-based heuristics, not ground truth.", "The researcher specifies scientific importance; the tool only translates that intent into a visual hierarchy.", "Review the target at final publication size and add non-colour cues where needed."]
+        };
+        renderTransfer(latestTransfer);
+        transferStatus.textContent = `Generated a deterministic recommendation from ${referenceRecords.length} reference and ${targetRecords.length} target candidates.`;
       }
 
       function palettePayload() {
@@ -954,6 +1193,54 @@
         reader.readAsDataURL(file);
       }
 
+      function drawTransferImage(image, destinationCanvas, destinationContext) {
+        const maxDimension = 900;
+        const originalImageWidth = image.naturalWidth || image.width;
+        const originalImageHeight = image.naturalHeight || image.height;
+        const scale = Math.min(1, maxDimension / Math.max(originalImageWidth, originalImageHeight));
+        destinationCanvas.width = Math.max(1, Math.round(originalImageWidth * scale));
+        destinationCanvas.height = Math.max(1, Math.round(originalImageHeight * scale));
+        destinationContext.fillStyle = "#FFFFFF";
+        destinationContext.fillRect(0, 0, destinationCanvas.width, destinationCanvas.height);
+        destinationContext.drawImage(image, 0, 0, destinationCanvas.width, destinationCanvas.height);
+      }
+
+      function readTransferFile(file, kind) {
+        if (!file || !file.type.startsWith("image/")) { transferStatus.textContent = "Please choose a raster image file."; return; }
+        transferStatus.textContent = `Loading ${kind} figure locally…`;
+        const reader = new FileReader();
+        reader.onload = () => {
+          const image = new Image();
+          image.onload = () => {
+            if (kind === "reference") { referenceFigure = file; drawTransferImage(image, referenceCanvas, referenceContext); }
+            else { targetFigure = file; drawTransferImage(image, targetCanvas, targetContext); }
+            transferStatus.textContent = `${kind === "reference" ? "Reference" : "Target"} figure ready. ${referenceFigure && targetFigure ? "Describe the target and generate suggestions." : "Add the other figure to continue."}`;
+          };
+          image.onerror = () => { transferStatus.textContent = "This image could not be decoded by this browser."; };
+          image.src = reader.result;
+        };
+        reader.onerror = () => { transferStatus.textContent = "This file could not be read."; };
+        reader.readAsDataURL(file);
+      }
+
+      function transferReport(payload) {
+        const recommendation = payload.recommendation;
+        const lines = [
+          "Palette Transfer Lab report",
+          "",
+          `Reference: ${payload.reference.filename}`,
+          `Target: ${payload.target.filename} (${payload.target.figure_type})`,
+          `Important series requested: ${payload.target.requested_series_count}`,
+          `Emphasis intent: ${payload.target.emphasis_intent || "not specified"}`,
+          "",
+          "Proposed mapping:"
+        ];
+        recommendation.mapping.forEach((entry) => lines.push(`- ${entry.target_use}: ${entry.hex} — ${entry.reason}`));
+        lines.push("", "Notes:");
+        [...recommendation.simplification_advice, ...recommendation.accessibility_notes, ...payload.limitations].forEach((note) => lines.push(`- ${note}`));
+        return `${lines.join("\n")}\n`;
+      }
+
       browseButton.addEventListener("click", () => fileInput.click());
       fileInput.addEventListener("change", () => readFile(fileInput.files[0]));
       colorCount.addEventListener("input", () => {
@@ -966,6 +1253,29 @@
       exportCss.addEventListener("click", () => {
         const variables = latestRecords.map((record, index) => `  --palette-${index + 1}: ${rgbToHex(record.rgb)};`).join("\n");
         download("palette-candidates.css", "text/css", `:root {\n${variables}\n}\n`);
+      });
+      function selectMode(mode) {
+        const inspect = mode === "inspect";
+        inspectTab.setAttribute("aria-selected", String(inspect));
+        transferTab.setAttribute("aria-selected", String(!inspect));
+        inspectPanel.hidden = !inspect;
+        transferPanel.hidden = inspect;
+      }
+      inspectTab.addEventListener("click", () => selectMode("inspect"));
+      transferTab.addEventListener("click", () => selectMode("transfer"));
+      referenceBrowseButton.addEventListener("click", () => referenceFileInput.click());
+      targetBrowseButton.addEventListener("click", () => targetFileInput.click());
+      referenceFileInput.addEventListener("change", () => readTransferFile(referenceFileInput.files[0], "reference"));
+      targetFileInput.addEventListener("change", () => readTransferFile(targetFileInput.files[0], "target"));
+      runTransfer.addEventListener("click", runTransferAnalysis);
+      exportTransferJson.addEventListener("click", () => { if (transferPayload()) download("transfer.json", "application/json", `${JSON.stringify(transferPayload(), null, 2)}\n`); });
+      exportTransferReport.addEventListener("click", () => { if (transferPayload()) download("transfer-report.txt", "text/plain", transferReport(transferPayload())); });
+      exportTransferCss.addEventListener("click", () => {
+        const payload = transferPayload(); if (!payload) return;
+        const entries = [["background-neutral", payload.recommendation.background_neutral], ["structural-neutral", payload.recommendation.structural_neutrals[0]], ["dark-anchor", payload.recommendation.dark_anchor], ["rare-accent", payload.recommendation.rare_accent]];
+        payload.recommendation.data_colours.forEach((record, index) => entries.push([`data-${index + 1}`, record]));
+        const variables = entries.filter(([, record]) => record).map(([name, record]) => `  --transfer-${name}: ${record.hex};`).join("\n");
+        download("transfer.css", "text/css", `:root {\n${variables}\n}\n`);
       });
 
       ["dragenter", "dragover"].forEach((eventName) => {
