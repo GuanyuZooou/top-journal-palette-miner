@@ -140,6 +140,7 @@
 
     .transfer-intro { margin: 0 0 20px; color: var(--muted); line-height: 1.5; }
     .transfer-inputs, .transfer-results { display: grid; gap: 16px; }
+    .transfer-results[hidden] { display: none; }
     .transfer-inputs { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: 18px; }
     .transfer-card, .result-card {
       padding: 18px;
@@ -149,12 +150,13 @@
     }
     .transfer-card h2, .result-card h2 { margin-bottom: 5px; }
     .transfer-card p, .result-card p { color: var(--muted); font-size: 0.82rem; line-height: 1.45; }
-    .mini-canvas { display: block; width: 100%; max-height: 245px; margin-top: 13px; background: #fbfcff; border: 1px dashed #b7c5e2; border-radius: 10px; object-fit: contain; }
+    .mini-canvas { display: block; width: 100%; height: 152px; margin-top: 13px; background: #fbfcff; border: 1px dashed #b7c5e2; border-radius: 10px; object-fit: contain; }
     .transfer-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 18px; }
     .field-label { display: grid; gap: 6px; color: var(--ink); font-size: 0.79rem; font-weight: 700; }
     .field-label input, .field-label select { width: 100%; min-height: 38px; padding: 7px 9px; border: 1px solid #cbd7ed; border-radius: 8px; background: #fff; color: var(--ink); }
     .field-wide { grid-column: span 2; }
     .transfer-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .demo-note { margin: 0; color: var(--muted); font-size: 0.78rem; }
     .transfer-status { margin: 0; color: var(--muted); font-size: 0.81rem; }
     .role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 9px; }
     .role-card { padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: #fbfcff; }
@@ -584,7 +586,7 @@
     </section>
 
     <section id="transferPanel" class="mode-panel" role="tabpanel" aria-labelledby="transferTab" hidden>
-      <p class="transfer-intro">Use a reference figure to build a restrained, reviewable colour plan for your own figure. The tool does not infer scientific meaning: you specify the series or result that matters.</p>
+      <p class="transfer-intro">Turn a strong reference into a restrained, reviewable colour plan for your own figure. Start with the demo to see the workflow, or add two figures below. You decide what matters scientifically; the tool only organises visual hierarchy.</p>
       <div class="transfer-inputs">
         <section class="transfer-card" aria-labelledby="reference-heading">
           <h2 id="reference-heading">1. Add a reference figure</h2>
@@ -613,6 +615,7 @@
         </label>
       </div>
       <div class="transfer-actions">
+        <button id="loadTransferDemo" class="button button-secondary" type="button">Try the demo</button>
         <button id="runTransfer" class="button" type="button">Generate suggestions</button>
         <p id="transferStatus" class="transfer-status" aria-live="polite">Add both figures, then describe the target.</p>
       </div>
@@ -659,6 +662,7 @@
       const seriesCount = document.getElementById("seriesCount");
       const emphasisIntent = document.getElementById("emphasisIntent");
       const runTransfer = document.getElementById("runTransfer");
+      const loadTransferDemo = document.getElementById("loadTransferDemo");
       const transferStatus = document.getElementById("transferStatus");
       const transferResults = document.getElementById("transferResults");
       const roleCards = document.getElementById("roleCards");
@@ -705,9 +709,9 @@
         const luminance = relativeLuminance(rgb);
         const colorfulness = saturation(rgb);
         if (luminance > 0.91 && colorfulness < 0.12) return "Background neutral";
-        if (colorfulness < 0.13) return "Structural neutral";
-        if (share < 0.032 && colorfulness > 0.34) return "Rare accent";
         if (luminance < 0.14) return "Dark anchor";
+        if (colorfulness < 0.13) return "Structural neutral";
+        if (share < 0.005 && colorfulness > 0.34) return "Rare accent";
         return "Data colour";
       }
 
@@ -1223,6 +1227,21 @@
         reader.readAsDataURL(file);
       }
 
+      function loadTransferDemoFigure() {
+        referenceCanvas.width = canvas.width;
+        referenceCanvas.height = canvas.height;
+        referenceContext.drawImage(canvas, 0, 0);
+        targetCanvas.width = canvas.width;
+        targetCanvas.height = canvas.height;
+        targetContext.drawImage(canvas, 0, 0);
+        referenceFigure = { name: "Palette Lab reference demo" };
+        targetFigure = { name: "Palette Lab target demo" };
+        emphasisIntent.value = "highlighted response";
+        seriesCount.value = "3";
+        transferStatus.textContent = "Demo loaded. Review the suggested hierarchy below, then replace either figure with your own.";
+        runTransferAnalysis();
+      }
+
       function transferReport(payload) {
         const recommendation = payload.recommendation;
         const lines = [
@@ -1267,6 +1286,7 @@
       targetBrowseButton.addEventListener("click", () => targetFileInput.click());
       referenceFileInput.addEventListener("change", () => readTransferFile(referenceFileInput.files[0], "reference"));
       targetFileInput.addEventListener("change", () => readTransferFile(targetFileInput.files[0], "target"));
+      loadTransferDemo.addEventListener("click", loadTransferDemoFigure);
       runTransfer.addEventListener("click", runTransferAnalysis);
       exportTransferJson.addEventListener("click", () => { if (transferPayload()) download("transfer.json", "application/json", `${JSON.stringify(transferPayload(), null, 2)}\n`); });
       exportTransferReport.addEventListener("click", () => { if (transferPayload()) download("transfer-report.txt", "text/plain", transferReport(transferPayload())); });
