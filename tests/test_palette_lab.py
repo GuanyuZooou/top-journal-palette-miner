@@ -35,12 +35,19 @@ class PaletteLabTests(unittest.TestCase):
             "targetFileInput",
             "seriesCount",
             "runTransfer",
+            "loadTransferDemo",
             "exportTransferJson",
         ):
             self.assertIn(f'id="{element_id}"', document)
         self.assertNotIn("fetch(", document)
         self.assertNotIn("XMLHttpRequest", document)
         self.assertNotIn("https://", document)
+
+    def test_transfer_empty_results_stay_hidden_and_demo_is_available(self) -> None:
+        document = PAGES_ENTRY.read_text(encoding="utf-8")
+        self.assertIn(".transfer-results[hidden] { display: none; }", document)
+        self.assertIn("function loadTransferDemoFigure", document)
+        self.assertIn("Try the demo", document)
 
     def test_transfer_rules_and_schema_are_present(self) -> None:
         document = PAGES_ENTRY.read_text(encoding="utf-8")
@@ -51,6 +58,7 @@ class PaletteLabTests(unittest.TestCase):
             "requested_series_count",
             "no colours were fabricated",
             "The only rare accent allocation",
+            "share < 0.005",
         ):
             self.assertIn(text, document)
 
