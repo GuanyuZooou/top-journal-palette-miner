@@ -16,3 +16,29 @@ Keep measured values separate from interpretation. Use `unknown` rather than inv
 ```
 
 `review_scope` describes what was actually analysed: use `full-image` for one image, `confirmed-panel` for a manually reviewed crop, and `automatic-panel-candidates` only for the output of the panel detector. Preserve the detector's pixel bounds and its annotated PNG alongside any later interpretation. The version field identifies the deterministic extraction implementation, not the publisher's original colour specification.
+
+## Transfer Lab schema (v0.3a)
+
+`transfer.json` records an explainable recommendation rather than an automatic recolouring. The target's `observed_palette` is evidence for simplification notes; it does not identify scientific series or importance.
+
+```json
+{
+  "schema_version": 1,
+  "algorithm_version": "0.3.0-web",
+  "reference": {"filename": "reference.png", "palette": [], "roles": []},
+  "target": {"filename": "target.png", "figure_type": "line", "requested_series_count": 3, "emphasis_intent": "key response", "observed_palette": []},
+  "recommendation": {
+    "background_neutral": null,
+    "structural_neutrals": [],
+    "data_colours": [],
+    "dark_anchor": null,
+    "rare_accent": null,
+    "mapping": [],
+    "simplification_advice": [],
+    "accessibility_notes": []
+  },
+  "limitations": []
+}
+```
+
+When the reference lacks enough candidate data colours, retain the shortfall and add a warning. Do not fabricate supplementary colours. A rare accent can appear in at most one mapping and only after the researcher supplies an emphasis intent.

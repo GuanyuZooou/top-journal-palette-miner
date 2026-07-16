@@ -15,7 +15,7 @@ Extract the colour logic, not just the colour codes.
 4. Review candidates visually. Merge anti-aliased or compression-derived variants; retain small, saturated accents even when their area is low.
 5. Infer roles from geometry and context: axes/text, background data, paired categories, ordered series, reference, uncertainty, or exceptional highlight.
 6. Test the proposed sub-palette for grayscale contrast, colour-vision robustness, small-mark visibility, and print suitability.
-7. Transfer roles to the target figure. Preserve hierarchy and relationships; do not copy every mined colour into one plot.
+7. Transfer roles to the target figure. Preserve hierarchy and relationships; do not copy every mined colour into one plot. In Palette Lab's Transfer mode, ask the researcher for figure type, important-series count, and optional emphasis intent; do not infer scientific importance from pixels.
 8. Export a concise palette record with provenance, uncertainty, roles, sub-palettes, and recommended uses.
 
 ## Run the extractor
@@ -69,6 +69,8 @@ Infer co-occurrence at panel level. A colour present elsewhere on the page is no
 ## Transfer to a target figure
 
 Map scientific meaning to roles before assigning HEX values. Recommend the smallest sufficient sub-palette and add non-colour redundancy such as marker shapes, line styles, labels, or hatching.
+
+For v0.3a, use deterministic suggestions only: select reference candidates already labelled as data colours, limit them to the requested series count, and emit a warning rather than generating colours when there are too few. Assign a rare accent only once and only to the researcher-specified emphasis. Treat target pixels as evidence for potential simplification, never as proof of scientific semantics. Export `transfer.json`, a readable report, and CSS variables for review.
 
 Use `references/output-schema.md` for a durable palette-library record. Use `references/accessibility.md` for accessibility review and reporting.
 
